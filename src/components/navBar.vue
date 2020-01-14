@@ -24,9 +24,11 @@ export default {
         if (payload==='asc') {
             this.asc = 'color: #ed1b0c';
             this.desc = 'color: #1b1c1b';
+            // 오름차순 정렬 구현 => 스토어를 통해서
         } else {
             this.asc = 'color: #1b1c1b';
             this.desc = 'color: #ed1b0c';
+            // 내림차순 정렬 구현 => 스토어를 통해서
         }
     },
 

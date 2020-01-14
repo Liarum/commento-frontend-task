@@ -1,15 +1,21 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <navBar />
+    <postList />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-
+import navBar from "../components/navBar"
+import postList from "../components/postList"
 export default {
   name: 'home',
   components: {
+    postList,
+    navBar
+  },
+  mounted: {
+
   }
 }
 </script>
