@@ -17,7 +17,8 @@ export default {
     getFilterCategory() {
         axios.get(baseUrl + "/api/category")
             .then(res => {
-                console.log(res.data.list)
+                console.log("service", res.data.list)
+                return res.data.list
             })
             .catch(err => console.log(err))
     },

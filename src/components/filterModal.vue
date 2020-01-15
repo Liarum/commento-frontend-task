@@ -59,13 +59,14 @@ export default {
         ...mapGetters(['allCategory', 'savedCategory']),
     },
     mounted() {
-        if (this.savedCategory.length===0) {
-            this.allCategory.forEach(
-                cat => {this.filterdCategory.push(cat.id)}
-            )
-        } else {
-            this.filterdCategory = this.savedCategory
-        }
+        this.filterdCategory = this.savedCategory;
+        // if (this.savedCategory.length===0) {
+        //     this.allCategory.forEach(
+        //         cat => {this.filterdCategory.push(cat.id)}
+        //     )
+        // } else {
+        //     this.filterdCategory = this.savedCategory
+        // }
     }
 }
 </script>

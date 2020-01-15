@@ -15,6 +15,7 @@
 <script>
 import CommentoService from '../services/CommentoService'
 import filterModal from '../components/filterModal'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'navBar',
@@ -29,15 +30,17 @@ export default {
     filterModal
   },
   methods: {
+    ...mapActions(["setOrder"]),
     toggleOrder(payload) {
         if (payload==='asc') {
+            this.setOrder('asc')
             this.asc = 'color: #ed1b0c';
             this.desc = 'color: #1b1c1b';
-            // 오름차순 정렬 구현 => 스토어를 통해서
+
         } else {
+            this.setOrder('desc')
             this.asc = 'color: #1b1c1b';
             this.desc = 'color: #ed1b0c';
-            // 내림차순 정렬 구현 => 스토어를 통해서
         }
     },
     test() {

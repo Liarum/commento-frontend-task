@@ -14,7 +14,7 @@ export default {
     postList,
     navBar
   },
-  mounted: {
+  mounted() {
 
   }
 }
