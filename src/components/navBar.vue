@@ -1,7 +1,9 @@
 <template>
   <div id="nav">
       <div id="filter-area">
-        <button>필터</button>
+        <button id="show-modal" @click="showModal = true">필터</button>
+        <filterModal v-if="showModal" @close="showModal = false" />
+
         <div>
           <span :style=asc @click="toggleOrder('asc')">오름차순 </span>
           <span :style=desc @click="toggleOrder('desc')">내림차순</span>
@@ -11,13 +13,20 @@
 </template>S
 
 <script>
+import CommentoService from '../services/CommentoService'
+import filterModal from '../components/filterModal'
+
 export default {
   name: 'navBar',
   data() {
       return {
         asc: 'color: #ed1b0c',
-        desc: 'color: #1b1c1b'
+        desc: 'color: #1b1c1b',
+        showModal: false
       }
+  },
+  components: {
+    filterModal
   },
   methods: {
     toggleOrder(payload) {
@@ -31,7 +40,12 @@ export default {
             // 내림차순 정렬 구현 => 스토어를 통해서
         }
     },
-
+    test() {
+        //CommentoService.getFilterCategory()
+        // CommentoService.getPostDetail({"id" : 1})
+        // CommentoService.getPostList({"page":1, "ord": "asc", "category[0]":1, "category[1]": 2, limit: 10})
+        // CommentoService.getAdList({"page": 1, "limit": 2})
+    }
   },
   computed: {
 
@@ -43,17 +57,16 @@ export default {
 #nav {
   padding: 30px;
 
-  a {
+  span {
     font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    cursor: pointer;
   }
 }
 
 #filter-area {
+    width: 95%;
+    position: fixed;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
 }
