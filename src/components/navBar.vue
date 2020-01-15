@@ -10,7 +10,7 @@
         </div>
       </div>
   </div>
-</template>S
+</template>
 
 <script>
 import CommentoService from '../services/CommentoService'

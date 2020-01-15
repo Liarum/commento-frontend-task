@@ -22,11 +22,16 @@
             <div id="card-header" class="card-header">
                 <span>카테고리: {{allCategory[postList[i-1].category_id].name}}</span> <span>글번호: {{postList[i-1].id}}</span>
             </div>
+
+
             <div class="card-body">
                 <p class="card-title">test@comment.kr | {{postList[i-1].created_at}}</p>
-                <h5 class="card-title post-title">{{postList[i-1].title}}</h5>
-                <p class="card-text post-body">{{postList[i-1].contents}}</p>
+                <router-link :to="{ name: 'detail', params: {postId: postList[i-1].id } }">
+                    <h5 class="card-title post-title">{{postList[i-1].title}}</h5>
+                    <p class="card-text post-body">{{postList[i-1].contents}}</p>
+                </router-link>
             </div>
+
         </div>
     </div>
 
@@ -89,6 +94,13 @@ export default {
 }
 .card-body {
     text-align: left;
+    a {
+        color: #2c3e50;
+        text-decoration: none;
+        &.router-link-exact-active {
+          color: #2c3e50;
+        }
+      }
 }
 .post-title {
     white-space: nowrap;

@@ -38,35 +38,51 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import axios from 'axios'
+
+const baseUrl = "https://1rcwozojf0.execute-api.ap-northeast-2.amazonaws.com/production"
 
 export default {
     name: "filterModal",
     data() {
       return {
-          filterdCategory: []
+          filterdCategory: [],
+          posts: [],
       }
     },
     methods: {
-        ...mapActions(['setSavedCategory']),
+        ...mapActions(['setSavedCategory', 'setPosts']),
+        async getPostList() {
+            const requestUrl = baseUrl + "/api/list"
+            await axios.get(requestUrl, {
+                params: {
+                  "page":1,
+                  "ord": "asc",
+                  "limit": 10,
+                  "category" : this.savedCategory
+                }
+            })
+            .then(res => {
+                this.posts = res.data.list.data
+            })
+            .catch(err => console.log(err))
+        },
         saveFilter(arg) {
             this.setSavedCategory(arg)
+            this.getPostList()
             this.$emit('close')
         }
     },
     watch: {
+        posts() {
+            this.setPosts(this.posts)
+        }
     },
     computed: {
-        ...mapGetters(['allCategory', 'savedCategory']),
+        ...mapGetters(['allCategory', 'savedCategory', 'order']),
     },
     mounted() {
         this.filterdCategory = this.savedCategory;
-        // if (this.savedCategory.length===0) {
-        //     this.allCategory.forEach(
-        //         cat => {this.filterdCategory.push(cat.id)}
-        //     )
-        // } else {
-        //     this.filterdCategory = this.savedCategory
-        // }
     }
 }
 </script>
