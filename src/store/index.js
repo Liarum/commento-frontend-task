@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     allCategory: [], // [{id:1, name:"apple"},....{}]
-    savedCategory: [],
+    filteredCategory: [],
     postList: [],
     adList: [],
     order: 'asc',
@@ -14,7 +14,7 @@ export default new Vuex.Store({
   },
   getters: {
     allCategory: state => { return state.allCategory },
-    savedCategory: state => { return state.savedCategory },
+    filteredCategory: state => { return state.filteredCategory },
     order: state => { return state.order },
     postList: state => { return state.postList },
     adList: state => { return state.adList }
@@ -23,8 +23,8 @@ export default new Vuex.Store({
     SET_CATEGORY(state, payload) {
       state.allCategory = payload;
     },
-    SET_SAVED_CATEGORY(state, payload) {
-      state.savedCategory = payload;
+    SET_FILTERED_CATEGORY(state, payload) {
+      state.filteredCategory = payload;
     },
     SET_ORDER(state, orderType) {
       state.order = orderType
@@ -40,8 +40,8 @@ export default new Vuex.Store({
     setCategory({commit}, payload) {
       commit('SET_CATEGORY', payload)
     },
-    setSavedCategory({commit}, payload) {
-      commit('SET_SAVED_CATEGORY', payload)
+    setFilteredCategory({commit}, payload) {
+      commit('SET_FILTERED_CATEGORY', payload)
     },
     setOrder({commit}, orderType) {
       commit('SET_ORDER', orderType)
