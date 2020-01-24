@@ -85,7 +85,7 @@ export default {
         }
         const ads = await CommentoService.getAds(adParam)
         const newAds = this.adList.concat(ads)
-        await this.setAdList(newAds)
+        this.setAdList(newAds)
         await this.setPostList(newPosts)
     },
   },
