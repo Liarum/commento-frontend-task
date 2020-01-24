@@ -46,15 +46,15 @@ export default {
           "limit": 10
         }
         const postsInit = await CommentoService.getPosts(postParam)
-        await this.setPostList(postsInit)
-
+        
         // init adList
         const adParam = {
           "page" : 1,
           "limit" : 3
         }
         const adsInit = await CommentoService.getAds(adParam)
-        await this.setAdList(adsInit)
+        this.setAdList(adsInit)
+        await this.setPostList(postsInit)
       },
   },
   created() {
