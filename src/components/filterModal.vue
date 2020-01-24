@@ -15,9 +15,9 @@
 
           <div class="modal-body">
             <slot name="body">
-                <span v-for="cat in this.allCategory">
+                <span v-for="cat in this.allCategory" :key="cat.id">
                     <input class="filter-checkbox" type="checkbox"
-                           :name="cat.name" :value="cat.id" v-model="filterdCategory">
+                           :name="cat.name" :value="cat.id" v-model="checked">
                     <label :for="cat.name">{{cat.name}}</label>
                 </span>
             </slot>
@@ -25,7 +25,10 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-default-button" @click="saveFilter(filterdCategory)">
+              <button class="modal-default-button" @click="initFilter()">
+                초기화
+              </button>
+              <button class="modal-default-button" @click="saveFilter()">
                 저장
               </button>
             </slot>
@@ -38,53 +41,49 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import axios from 'axios'
-
-const baseUrl = "https://1rcwozojf0.execute-api.ap-northeast-2.amazonaws.com/production"
+import CommentoService from "../services/CommentoService"
 
 export default {
     name: "filterModal",
     data() {
       return {
-          filterdCategory: [],
-          posts: [],
+          allCats: [],
+          checked: [],
       }
     },
     methods: {
-        ...mapActions(['setSavedCategory', 'setPosts']),
-        async getPostList() {
-            const requestUrl = baseUrl + "/api/list"
-            await axios.get(requestUrl, {
-                params: {
-                  "page":1,
-                  "ord": "asc",
-                  "limit": 10,
-                  "category" : this.savedCategory
-                }
-            })
-            .then(res => {
-                this.posts = res.data.list.data
-            })
-            .catch(err => console.log(err))
-        },
-        saveFilter(arg) {
-            this.setSavedCategory(arg)
-            this.getPostList()
+        ...mapActions(['setFilteredCategory', 'setPostList']),
+      async saveFilter() {
+            await this.setFilteredCategory(this.checked)
+            const postParam = {
+              "page" : 1,
+              "ord" : this.order,
+              "category": this.checked,
+              "limit": this.limit
+            }
+            const posts = await CommentoService.getPosts(postParam)
+            await this.setPostList(posts)
             this.$emit('close')
-        }
+      },
+      initFilter() {
+          this.checked = this.allCats;
+      },
     },
     watch: {
-        posts() {
-            this.setPosts(this.posts)
-        }
     },
     computed: {
-        ...mapGetters(['allCategory', 'savedCategory', 'order']),
+        ...mapGetters(['allCategory', 'filteredCategory', 'order', 'limit']),
     },
     mounted() {
-        this.filterdCategory = this.savedCategory;
+      this.checked = this.filteredCategory;
+      let cats = [];
+      this.allCategory.forEach(c => {
+        cats.push(c.id)
+      });
+      this.allCats = cats;
     }
 }
+
 </script>
 
 <style lang="less">

@@ -1,8 +1,8 @@
 <template>
   <div id="nav">
-      <div id="filter-area">
+      <div class="filter-area">
         <button id="show-modal" @click="showModal = true">필터</button>
-        <filterModal v-if="showModal" @close="showModal = false" />
+        <filterModal v-if="showModal" @close="showModal=false" />
 
         <div>
           <span :style=asc @click="toggleOrder('asc')">오름차순 </span>
@@ -15,7 +15,7 @@
 <script>
 import CommentoService from '../services/CommentoService'
 import filterModal from '../components/filterModal'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'navBar',
@@ -30,8 +30,13 @@ export default {
     filterModal
   },
   methods: {
-    ...mapActions(["setOrder"]),
-    toggleOrder(payload) {
+    ...mapActions([
+        "setOrder",
+        "setAllCategory",
+        "setFilteredCategory",
+        "setPostList"
+    ]),
+    async toggleOrder(payload) {
         if (payload==='asc') {
             this.setOrder('asc')
             this.asc = 'color: #ed1b0c';
@@ -42,18 +47,25 @@ export default {
             this.asc = 'color: #1b1c1b';
             this.desc = 'color: #ed1b0c';
         }
+        const postParam = {
+              "page" : 1,
+              "ord" : payload,
+              "category": this.filteredCategory,
+              "limit": this.limit
+            }
+        const posts = await CommentoService.getPosts(postParam)
+        await this.setPostList(posts)
     },
-    test() {
-        //CommentoService.getFilterCategory()
-        // CommentoService.getPostDetail({"id" : 1})
-        // CommentoService.getPostList({"page":1, "ord": "asc", "category[0]":1, "category[1]": 2, limit: 10})
-        // CommentoService.getAdList({"page": 1, "limit": 2})
-    }
+
   },
   computed: {
-
-  }
+    ...mapGetters(["filteredCategory", "limit"])
+  },
+  mounted() {
+  },
 }
+
+
 </script>
 
 <style lang="less">
@@ -66,11 +78,13 @@ export default {
   }
 }
 
-#filter-area {
+.filter-area {
     width: 95%;
     position: fixed;
     z-index: 10;
     display: flex;
     justify-content: space-between;
 }
+
+
 </style>

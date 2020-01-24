@@ -1,84 +1,82 @@
+
 <template>
   <div id="post-list">
-    <!-- 가져올 게시물의 갯수만큼(LIMIT) 반복 -->
-    <div v-for="i in (postList.length)" :key="i" >
-        <div v-if="i % 5 === 0" class="card">
+
+    <div v-for="i in (postList.length + adList.length)" :key="i">
+        <div v-if="i % 4 === 0" class="card">
             <div class="ad-title">
                 <span>Sponsored</span>
             </div>
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <img :src="'https://cdn.comento.kr/assignment/' + adList[i/5 -1].img"
+                    <img :src="'https://cdn.comento.kr/assignment/' + adList[i/4-1].img"
                          class="card-img-left ad-img" alt="">
                 </div>
                 <div class="card-body col-12 col-sm-6">
-                    <h5 class="card-title">{{adList[i/5 -1].title}}</h5>
-                    <p class="card-text">{{adList[i/5 -1].contents}}</p>
+                    <h5 class="card-title">{{adList[i/4-1].title}}</h5>
+                    <p class="card-text">{{adList[i/4-1].contents}}</p>
                 </div>
             </div>
         </div>
 
         <div v-else class="card">
             <div id="card-header" class="card-header">
-                <span>카테고리: {{allCategory[postList[i-1].category_id].name}}</span> <span>글번호: {{postList[i-1].id}}</span>
+                <span>카테고리: {{allCategory[postList[i-1-parseInt(i/4)].category_id-1].name}}</span>
+                <span>글번호: {{postList[i-1-parseInt(i/4)].id}}</span>
             </div>
 
-
             <div class="card-body">
-                <p class="card-title">test@comment.kr | {{postList[i-1].created_at}}</p>
-                <router-link :to="{ name: 'detail', params: {postId: postList[i-1].id } }">
-                    <h5 class="card-title post-title">{{postList[i-1].title}}</h5>
-                    <p class="card-text post-body">{{postList[i-1].contents}}</p>
-                </router-link>
+                <p class="card-title">test@comment.kr | {{postList[i-1-parseInt(i/4)].created_at}}</p>
+                <div id="detail-link" @click="toDetail(postList[i-1-parseInt(i/4)].id)">
+                    <h5 class="card-title post-title">{{postList[i-1-parseInt(i/4)].title}}</h5>
+                    <p class="card-text post-body">{{postList[i-1-parseInt(i/4)].contents}}</p>
+                </div>
             </div>
 
         </div>
     </div>
 
+
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import {mapActions, mapGetters} from 'vuex'
-const baseUrl = "https://1rcwozojf0.execute-api.ap-northeast-2.amazonaws.com/production"
+import { mapActions, mapGetters } from 'vuex'
+import CommentoService from "../services/CommentoService"
 
 export default {
   name: 'postList',
   data() {
       return {
+          category: [],
           page: 1,
-          limit: 10,
       }
   },
   methods: {
-    ...mapActions(["setPosts"]),
-    async getPostList(params) {
-        const requestUrl = baseUrl + "/api/list"
-        await axios.get(requestUrl, {
-            params: {
-              "page": this.page,
-              "ord": this.order,
-              "limit": this.limit,
-              "category" : this.savedCategory
-            }
-        })
-        .then(res => {
-            this.setPosts(res.data.list.data)
-            // console.log('200', this.posts)
-        })
-        .catch(err => console.log(err))
-    },
-
+    ...mapActions([
+        "setPostList",
+        "setAdList",
+        "setPostDetail"
+        ]),
+    async toDetail(postId) {
+      const detailInfo = await CommentoService.getPostDetail(postId)
+      await this.setPostDetail(detailInfo)
+      await this.$router.push("/detail")
+    }
   },
   mounted() {
-      console.log(this.adList)
   },
   computed: {
-    ...mapGetters(['order', 'savedCategory',
-        'allCategory', 'postList', 'adList'])
+    ...mapGetters([
+        "postList",
+        "adList",
+        "allCategory"
+    ])
   },
 }
+
+
+
 </script>
 
 <style lang="less">
@@ -106,7 +104,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
 }
 
 .post-body {
@@ -125,5 +122,12 @@ export default {
 .ad-img {
     max-width: 100%;
     height: auto;
+}
+#detail-link {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: #8ccccf;
+  }
 }
 </style>
