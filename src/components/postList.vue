@@ -78,6 +78,14 @@ export default {
             }
         const posts = await CommentoService.getPosts(postParam)
         const newPosts = this.postList.concat(posts)
+
+        const adParam = {
+          "page" : this.page,
+          "limit" : parseInt(this.limit / 3)
+        }
+        const ads = await CommentoService.getAds(adParam)
+        const newAds = this.adList.concat(ads)
+        await this.setAdList(newAds)
         await this.setPostList(newPosts)
     },
   },
@@ -90,7 +98,7 @@ export default {
         "allCategory",
         "order",
         "limit",
-        "filteredCategory"
+        "filteredCategory",
     ])
   },
 }
