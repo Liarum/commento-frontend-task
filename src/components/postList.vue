@@ -36,16 +36,20 @@
         </div>
     </div>
 
-
+    <observer @intersect="intersected"/>
   </div>
 </template>
 
 <script>
+import observer from "../components/observer"
 import { mapActions, mapGetters } from 'vuex'
 import CommentoService from "../services/CommentoService"
 
 export default {
   name: 'postList',
+  components: {
+    observer,
+  },
   data() {
       return {
           category: [],
@@ -62,7 +66,20 @@ export default {
       const detailInfo = await CommentoService.getPostDetail(postId)
       await this.setPostDetail(detailInfo)
       await this.$router.push("/detail")
-    }
+    },
+    async intersected() {
+        this.page++;
+        
+        const postParam = {
+              "page" : this.page,
+              "ord" : this.order,
+              "category": this.filteredCategory,
+              "limit": this.limit
+            }
+        const posts = await CommentoService.getPosts(postParam)
+        const newPosts = this.postList.concat(posts)
+        await this.setPostList(newPosts)
+    },
   },
   mounted() {
   },
@@ -70,7 +87,10 @@ export default {
     ...mapGetters([
         "postList",
         "adList",
-        "allCategory"
+        "allCategory",
+        "order",
+        "limit",
+        "filteredCategory"
     ])
   },
 }

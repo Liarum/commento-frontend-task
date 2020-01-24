@@ -21,7 +21,6 @@
         {{postDetail.contents}}
       </div>
 
-      <hr>
       <div>
         <h4>Comments</h4>
         <div v-if="postDetail.reply" class="comment-area div-space" 
