@@ -1,7 +1,10 @@
 <template>
   <div id="nav">
       <div class="filter-area">
-        <button id="show-modal" @click="showModal = true">필터</button>
+        <button id="show-modal" @click="showModal = true"
+            type="button" class="btn btn-info">
+            필터
+        </button>
         <filterModal v-if="showModal" @close="showModal=false" />
 
         <div>

@@ -25,10 +25,12 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              <button class="modal-default-button" @click="initFilter()">
+              <button class="modal-default-button btn btn-secondary" type="button"
+                  @click="initFilter()">
                 초기화
               </button>
-              <button class="modal-default-button" @click="saveFilter()">
+              <button class="modal-default-button btn btn-success" type="button"  
+                  @click="saveFilter()">
                 저장
               </button>
             </slot>
